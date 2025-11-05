@@ -1,0 +1,61 @@
+  <div class="auth-wrapper">
+    <div class=" row g-0">
+      <!-- Left: Login form -->
+      <div class="col-md-6 auth-left">
+        <div class="auth-title">Login</div>
+        <div class="underline"></div>
+		{{#if error}}
+        <div class="alert alert-danger">{{error}}</div>
+		{{/if}}
+
+        <form action="/login" method="POST" class="mt-4">
+          <!-- Email -->
+          <div class="mb-3 position-relative">
+            <a href="#email"><i for="email" href="" class="bi bi-envelope-fill input-icon"></i></a>
+            <input id="email" type="email" name="email" class="form-controls" placeholder="Enter your email" required>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-2 position-relative">
+            <a href="#password"><i for="password" class="bi bi-lock-fill input-icon"></i></a>
+            <input id="password" type="password" name="password" class="form-controls" placeholder="Enter your password" required>
+          </div>
+
+          <div class="mb-4">
+            <a href="/forgot-password" class="link-muted">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn1 btn-accent1 text-white">Login</button>
+
+          <p class="small-text mt-4 mb-0">
+            Don’t have an account? <a href="reg-phone">Register here</a>
+          </p>
+        </form>
+        {{#if success}}
+        <script>
+          Swal.fire({
+            icon: 'success',
+            title: 'Password Reset Successful',
+            text: '{{success}}',
+            confirmButtonColor: '#3085d6',
+          });
+        </script>
+        {{/if}}
+      </div>
+      <!-- Right: Image + text -->
+      <div class="col-md-6 auth-right">
+        <div>
+          <div class="quote">Access the services you need, when you need them.</div>
+          <div class="subquote">let’s get connected</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+  if (window.history && window.history.pushState) {
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+      window.history.go(1);
+    };
+  }
+</script>

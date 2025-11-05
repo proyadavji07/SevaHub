@@ -1,0 +1,240 @@
+<style>
+  .auth-title { padding: 40px 0 0 40px; }
+  .auth-left { padding: 0 0 0 40px; width: 100%; }
+  .auth-wrapper { width: 65%; margin: 0 0 0 10px; padding: 0; }
+  .btn-accent1 { width: 100%; }
+  .form-controls { padding-left: 0px; width: 100%; }
+
+  /* Password strength styles */
+  .password-strength {
+    height: 6px;
+    border-radius: 4px;
+    background-color: #ddd;
+    margin-top: 5px;
+  }
+  .strength-weak { background-color: #ff4d4d; width: 33%; }
+  .strength-medium { background-color: #ffa500; width: 66%; }
+  .strength-strong { background-color: #28a745; width: 100%; }
+  .strength-text {
+    font-size: 13px;
+    margin-top: 4px;
+  }
+</style>
+
+<div class="auth-wrapper">
+  <h2 class="auth-title">Step 4: Register as Customer</h2>
+  <div class="col-md-6 auth-left">
+    <div class="underline"></div>
+    <br>
+    {{#if error}}
+      <p style="color:red">{{error}}</p>
+    {{/if}}
+    <form id="registerForm" action="/register" method="POST">
+      <input type="hidden" name="phone" value="{{phone}}">
+      <input type="hidden" name="role" value="customer">
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" class="form-controls" placeholder="Enter Name" required/>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Gender</label>
+          <select name="gender" id="gender" required class="form-controls">
+            <option value="">-- Select Gender --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+
+        <div class="col-12 mb-3">
+          <label class="form-label">Address</label>
+          <textarea name="address" class="form-controls" placeholder="Enter Address" required>{{address}}</textarea>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date of Birth</label>
+          <input type="date" name="dob" class="form-controls" required/>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Email Address</label>
+          <div class="input-group">
+            <input type="email" id="email" name="email" class="form-controls" placeholder="Enter Email" required>
+            <button type="button" id="sendEmailOtpBtn" class="btn btn-secondary btn-sm" style="margin-left:10px;">Send OTP</button>
+          </div>
+
+          <!-- Hidden OTP input -->
+          <div id="emailOtpBox" style="display:none; margin-top:8px;">
+            <input type="text" id="emailOtp" class="form-controls" placeholder="Enter OTP">
+            <button type="button" id="verifyEmailOtpBtn" class="btn btn-success btn-sm mt-2">Verify OTP</button>
+            <small id="otpStatus" style="display:block; margin-top:5px;"></small>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" id="password" name="password" class="form-controls" placeholder="Enter Password" required/>
+          <div class="password-strength" id="strength-bar"></div>
+          <small class="strength-text" id="strength-text"></small>
+          <small style="display:block; color:#666;">
+            Must be eight characters, include 1 number, 1 letter & 1 symbol.
+          </small>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" class="form-controls" placeholder="Re-enter Password" required/>
+          <small id="matchText" style="font-size:13px;"></small>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-accent1 btn-primary mt-3 m-3 text-white">Complete Registration</button>
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const emailInput = document.getElementById("email");
+  const sendOtpBtn = document.getElementById("sendEmailOtpBtn");
+  const otpBox = document.getElementById("emailOtpBox");
+  const otpInput = document.getElementById("emailOtp");
+  const verifyBtn = document.getElementById("verifyEmailOtpBtn");
+  const otpStatus = document.getElementById("otpStatus");
+  const submitBtn = document.querySelector('button[type="submit"]');
+
+  let isVerified = false;
+
+  // Disable form submission until verified
+  submitBtn.disabled = true;
+
+  // Send OTP
+  sendOtpBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    if (!email) return alert("Please enter an email first!");
+
+    try {
+      const res = await fetch("/send-email-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        otpBox.style.display = "block";
+        otpStatus.textContent = "OTP sent successfully to your email.";
+        otpStatus.style.color = "green";
+      } else {
+        otpStatus.textContent = data.error || "Failed to send OTP.";
+        otpStatus.style.color = "red";
+      }
+    } catch (err) {
+      otpStatus.textContent = "Server error. Try again later.";
+      otpStatus.style.color = "red";
+    }
+  });
+
+  // Verify OTP
+  verifyBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const otp = otpInput.value.trim();
+    if (!otp) return alert("Please enter the OTP.");
+
+    try {
+      const res = await fetch("/verify-email-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        otpStatus.textContent = "✅ Email verified successfully!";
+        otpStatus.style.color = "green";
+        emailInput.readOnly = true;
+        otpInput.disabled = true;
+        sendOtpBtn.disabled = true;
+        verifyBtn.disabled = true;
+        submitBtn.disabled = false;
+        isVerified = true;
+      } else {
+        otpStatus.textContent = data.error || "Invalid OTP.";
+        otpStatus.style.color = "red";
+      }
+    } catch (err) {
+      otpStatus.textContent = "Error verifying OTP.";
+      otpStatus.style.color = "red";
+    }
+  });
+});
+</script>
+
+<script>
+  const password = document.getElementById('password');
+  const confirmPassword = document.getElementById('confirmPassword');
+  const strengthBar = document.getElementById('strength-bar');
+  const strengthText = document.getElementById('strength-text');
+  const matchText = document.getElementById('matchText');
+
+  password.addEventListener('input', () => {
+    const value = password.value;
+    let strength = 0;
+
+    if (/[A-Za-z]/.test(value)) strength++;
+    if (/[0-9]/.test(value)) strength++;
+    if (/[^A-Za-z0-9]/.test(value)) strength++;
+    if (value.length >= 8) strength++;
+
+    strengthBar.className = 'password-strength';
+    strengthText.textContent = '';
+
+    if (value.length === 0) return;
+
+    if (strength <= 1) {
+      strengthBar.classList.add('strength-weak');
+      strengthText.textContent = 'Weak Password';
+      strengthText.style.color = '#ff4d4d';
+    } else if (strength === 2 || strength === 3) {
+      strengthBar.classList.add('strength-medium');
+      strengthText.textContent = 'Medium Strength';
+      strengthText.style.color = '#ffa500';
+    } else {
+      strengthBar.classList.add('strength-strong');
+      strengthText.textContent = 'Strong Password';
+      strengthText.style.color = '#28a745';
+    }
+  });
+
+  confirmPassword.addEventListener('input', () => {
+    if (confirmPassword.value === '') {
+      matchText.textContent = '';
+      return;
+    }
+
+    if (confirmPassword.value === password.value) {
+      matchText.textContent = 'Passwords match';
+      matchText.style.color = '#28a745';
+    } else {
+      matchText.textContent = 'Passwords do not match';
+      matchText.style.color = '#ff4d4d';
+    }
+  });
+
+  // Validate before submitting
+  document.getElementById('registerForm').addEventListener('submit', (e) => {
+    const pass = password.value;
+    const confirm = confirmPassword.value;
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+    if (!regex.test(pass)) {
+      e.preventDefault();
+      alert('Password must be at least 8 characters long and include letters, numbers, and symbols.');
+    } else if (pass !== confirm) {
+      e.preventDefault();
+      alert('Passwords do not match.');
+    }
+  });
+</script>

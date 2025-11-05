@@ -1,0 +1,142 @@
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Make Payment</h2>
+
+  <div class="card shadow-sm p-4 border-0 rounded-3">
+    <h4 class="mb-3 text-primary fw-bold">Order Details</h4>
+    <p><strong>Service:</strong> {{order.service}}</p>
+    <p><strong>Provider:</strong> {{order.serviceProvider.name}}</p>
+    <p><strong>Total Amount:</strong> ₹{{order.totalAmount}}</p>
+
+    <hr>
+
+    <form action="/customer/payments/{{order._id}}/confirm" method="POST" id="paymentForm">
+      <div class="form-group mb-3">
+        <label for="paymentMethod" class="fw-semibold">Select Payment Method:</label>
+        <select name="paymentMethod" id="paymentMethod" class="form-select" required>
+          <option value="">-- Choose Method --</option>
+          <option value="upi">UPI</option>
+          <option value="card">Credit / Debit Card</option>
+          <option value="cod">Cash on Service</option>
+        </select>
+      </div>
+
+      <!-- Dynamic Payment Sections -->
+      <div id="paymentDetails" class="mt-3"></div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <a href="/customer/orders" class="btn btn-outline-secondary px-4">Cancel</a>
+        <button type="submit" class="btn btn-success px-4">Pay Now</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .payment-box {
+    background: #f9fafc;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e2e6ea;
+  }
+  .payment-logo {
+    height: 30px;
+    margin-right: 10px;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  const paymentSelect = document.getElementById("paymentMethod");
+  const paymentDetails = document.getElementById("paymentDetails");
+  const paymentForm = document.getElementById("paymentForm");
+
+  // 🧾 Dynamic payment field handling
+  paymentSelect.addEventListener("change", function () {
+    const method = this.value;
+    paymentDetails.innerHTML = ""; // clear previous inputs
+
+    if (method === "upi") {
+      paymentDetails.innerHTML = `
+        <div class="payment-box">
+          <label class="form-label fw-semibold">Enter UPI ID:</label>
+          <div class="input-group mb-2">
+            <input type="text" name="upiId" class="form-control" placeholder="e.g. username@upi" required>
+            <span class="input-group-text">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" class="payment-logo" alt="UPI Logo">
+            </span>
+          </div>
+          <small class="text-muted">We’ll request ₹{{order.totalAmount}} from this UPI ID.</small>
+        </div>
+      `;
+    } 
+    else if (method === "card") {
+      paymentDetails.innerHTML = `
+        <div class="payment-box">
+          <label class="form-label fw-semibold">Card Number:</label>
+          <input type="text" name="cardNumber" class="form-control mb-2" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" required>
+
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <label class="form-label fw-semibold">Expiry Date:</label>
+              <input type="text" name="expiry" class="form-control" placeholder="MM/YY" required>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="form-label fw-semibold">CVV:</label>
+              <input type="password" name="cvv" class="form-control" maxlength="3" placeholder="***" required>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center mt-2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" class="payment-logo" alt="Visa">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Mastercard_2019_logo.svg" class="payment-logo" alt="Mastercard">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/RuPay.svg" class="payment-logo" alt="RuPay">
+          </div>
+        </div>
+      `;
+    } 
+    else if (method === "cod") {
+      paymentDetails.innerHTML = `
+        <div class="payment-box text-center">
+          <img src="https://cdn-icons-png.flaticon.com/512/2716/2716715.png" width="60" class="mb-2" alt="Cash Icon">
+          <h6>Cash on Service</h6>
+          <p class="text-muted mb-1">
+            You can pay ₹{{order.totalAmount}} directly to the service provider after service completion.
+          </p>
+          <small class="text-muted" style="font-size: 12px;">
+            Icons made from <a href="https://www.onlinewebfonts.com/icon" target="_blank">SVG Icons</a> 
+            are licensed by <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
+          </small>
+        </div>
+      `;
+    }
+  });
+
+  // 💳 Show loading alert on submit
+  paymentForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const method = paymentSelect.value;
+    if (!method) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Select Payment Method!',
+        text: 'Please choose a payment method before proceeding.',
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Processing Payment...',
+      text: 'Please wait while we complete your transaction.',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // simulate processing delay for UX, then submit
+    setTimeout(() => {
+      paymentForm.submit();
+    }, 1500);
+  });
+</script>

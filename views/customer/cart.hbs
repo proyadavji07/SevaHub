@@ -1,0 +1,40 @@
+<div class="container mt-4">
+  <h2 class="mb-4">My Cart</h2>
+
+  {{#if cart.length}}
+    <table class="table table-bordered table-hover shadow-sm">
+      <thead class="thead-dark">
+        <tr>
+          <th>Service</th>
+          <th>Provider</th>
+          <th>Price</th>
+          <th>Action</th>    
+        </tr>
+      </thead>
+      <tbody>
+        {{#each cart}}
+          <tr>
+            <td>{{this.serviceName}}</td>
+            <td>{{this.serviceProviderId.name}}</td>
+            <td>₹{{this.price}}</td>
+            <td>
+              <!-- Remove button -->
+              <form action="/customer/cart/remove/{{this._id}}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+              </form>
+
+              <!-- Proceed button -->
+              <form action="/customer/checkout/{{this._id}}" method="GET" style="display:inline;">
+                <button type="submit" class="btn btn-success btn-sm">Proceed</button>
+              </form>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <div class="alert alert-info">
+      Your cart is empty. <a href="/">Browse services</a>
+    </div>
+  {{/if}}
+</div>

@@ -1,0 +1,29 @@
+<h2>Welcome, {{user.name}}</h2>
+<p>Here’s a quick summary of your activity:</p>
+
+<div class="row g-4 mt-3">
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body text-center">
+        <h5> In Cart</h5>
+        <h3>{{cartCount}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body text-center">
+        <h5> My Orders</h5>
+        <h3>{{myOrders}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body text-center">
+        <h5> Reviews</h5>
+        <h3>{{reviewCount}}</h3>
+      </div>
+    </div>
+  </div>
+</div>

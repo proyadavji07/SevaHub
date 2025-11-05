@@ -1,0 +1,53 @@
+<style>
+  .auth-title{
+    padding: 40px 0px 0px 40px;
+  }
+  .auth-left{
+    padding: 0px 0px 40px 40px;
+  }
+  .auth-wrapper{
+    width: 50%;
+    margin: 0px 0px 0px 10px;
+    padding: 0%;
+  }
+  .btn-accent1{
+    width: 40%;
+  }
+  .form-controls{
+    padding-left: 5px;
+    width: auto;
+  }
+</style>
+<div class="auth-wrapper">
+  <h2 class="auth-title">Register: Step 1 - Enter Phone</h2>
+  <div class="col-md-6 auth-left">
+  <div class="underline"></div>
+{{#if error}}
+  <p style="color:red">{{error}}</p>
+{{/if}}
+
+<form method="POST" action="/send-otp" onsubmit="return validatePhone()">
+  <div class="m-3 positon-relative">
+    <span class="input-group-t">
+      🇮🇳 +91
+    </span>
+    <input type="text" name="phone" id="phone" class="form-controls" placeholder="Enter 10-digit number" maxlength="10" required />
+  </div>
+
+  <button type="submit" class="btn-accent1 btn-primary mt-3 m-3 text-white">Send OTP</button>
+</form>
+</div>
+</div>
+
+<script>
+  function validatePhone() {
+    const phone = document.getElementById("phone").value;
+    const phonePattern = /^[0-9]{10}$/;
+
+    if (!phonePattern.test(phone)) {
+      alert("Please enter a valid 10-digit phone number.");
+      return false; // form submit stop karega
+    }
+    return true;
+  }
+</script>

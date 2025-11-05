@@ -1,0 +1,43 @@
+<style>
+  .auth-title{
+    padding: 40px 0px 0px 40px;
+  }
+  .auth-left{
+    padding: 0px 0px 40px 40px;
+  }
+  .auth-wrapper{
+    width: 50%;
+    margin: 0px 0px 0px 10px;
+    padding: 0%;
+  }
+  .btn-accent1{
+    width: 40%;
+  }
+  .form-controls{
+    padding-left: 5px;
+    width: auto;
+  }
+</style>
+<div class="auth-wrapper">
+  <h2 class="auth-title">Register: Step 2 - Verify OTP</h2>
+  <div class="col-md-6 auth-left">
+  <div class="underline"></div>
+{{#if error}}
+  <p style="color:red">{{error}}</p>
+{{/if}}
+
+<form method="POST" action="/verify-otp">
+<div class="input-group w-30 m-3">
+  <span>
+    <b>🇮🇳 +91 {{phone}}</b>
+  </span>
+</div>
+<div class=" w-25 m-3">
+  <input type="hidden" name="phone" value="{{phone}}" />
+  <input type="text" name="otp" class="form-controls" placeholder="Enter OTP" required />
+</div>
+<button type="submit" class="btn-accent1 btn-primary mt-1 m-3 text-white">Verify OTP</button>
+</form>
+</div>
+</div>
+

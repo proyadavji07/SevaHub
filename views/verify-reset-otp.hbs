@@ -1,0 +1,20 @@
+<div class="auth-wrapper">
+  <div class="col-md-6 auth-left">
+    <div class="auth-title">Verify OTP</div>
+    <div class="underline"></div>
+
+    {{#if error}}
+      <div class="alert alert-danger">{{error}}</div>
+    {{/if}}
+
+    <form action="/verify-reset-otp" method="POST" class="mt-4">
+      <input type="hidden" name="email" value="{{email}}">
+      <div class="mb-3 position-relative">
+        <i class="bi bi-key-fill input-icon"></i>
+        <input type="text" name="otp" class="form-controls" placeholder="Enter the OTP" required>
+      </div>
+
+      <button type="submit" class="btn1 btn-accent1 text-white">Verify OTP</button>
+    </form>
+  </div>
+</div>

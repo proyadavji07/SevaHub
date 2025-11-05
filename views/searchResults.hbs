@@ -1,0 +1,36 @@
+<div class="container mt-5 pt-5">
+  <h3 class="text-center mb-4">
+    {{#if providers.length}}
+      🔍 Providers Offering "{{serviceName}}"
+    {{else}}
+       No Providers Found
+    {{/if}}
+  </h3>
+
+  {{#if message}}
+    <p class="text-center text-muted">{{message}}</p>
+  {{/if}}
+
+  <div class="row">
+    {{#each providers}}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 rounded-3">
+          <img src="{{this.image}}" class="card-img-top" alt="{{this.name}}" style="height:200px;object-fit:cover;">
+          <div class="card-body">
+            <h5 class="card-title">{{this.name}}</h5>
+            <p class="card-text text-muted">{{this.address}}</p>
+
+            {{#if (lookup this.serviceType ../serviceName)}}
+              {{#with (lookup this.serviceType ../serviceName)}}
+                <p><strong>Price:</strong> ₹{{price}}</p>
+                <p>{{description}}</p>
+              {{/with}}
+            {{/if}}
+
+            <a href="/provider/{{this._id}}" class="btn btn-outline-dark w-100">View Provider</a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>

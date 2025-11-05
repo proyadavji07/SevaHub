@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Favicon (logo in browser tab) -->
+  <link rel="icon" type="image/png" href="/images/logo_v3.png">
+  <!-- Font by Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>Service Provider Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    * {
+      font-family: 'Raleway', sans-serif !important;
+    }
+
+    body { background: #f9f9f9; }
+    .form-control {
+      background: url('https://coolbackgrounds.imgix.net/5GbV8Si50TKkaulnxGwBa/f52a3d7e4d095c0ced0679c79f7d12f6/white-trianglify.jpg') no-repeat -50px;
+    }
+
+    .form-control:focus {
+      box-shadow: none !important;
+      border-color: #000000 !important;
+      outline: none !important;
+    }
+    
+    .form-select {
+      background: url('https://coolbackgrounds.imgix.net/5GbV8Si50TKkaulnxGwBa/f52a3d7e4d095c0ced0679c79f7d12f6/white-trianglify.jpg') no-repeat -50px;
+    }
+
+    .form-select:focus {
+      box-shadow: none !important;
+      border-color: #000000 !important;
+      outline: none !important;
+    }
+    .sidebar {
+      position: sticky; /* key change (not fixed) */
+      top: 70px; /* keeps below navbar */
+      align-self: flex-start;
+      height: calc(100vh - 70px);
+      background: #212529;
+      color: white;
+      padding-top: 20px;
+      width: 230px;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+    .sidebar a {
+      color: #ddd;
+      text-decoration: none;
+      display: block;
+      padding: 10px 20px;
+      transition: 0.2s ease-in-out;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: #6c757d;
+      color: #fff;
+      border-radius: 4px;
+    }
+    .main-content {
+      padding: 20px;
+    }
+
+    .success-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 40px 60px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      animation: popIn 0.3s ease;
+    }
+
+    .checkmark-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: inline-block;
+      border: 3px solid #a4e1a1;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .checkmark {
+      display: block;
+      width: 25px;
+      height: 50px;
+      border-right: 3px solid #4caf50;
+      border-bottom: 3px solid #4caf50;
+      transform: rotate(45deg);
+      position: absolute;
+      top: 10px;
+      left: 25px;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <br><br><br>
+  {{> header}}
+
+  <div class="container-fluid">
+    <div class="row">
+      
+      <!-- Sidebar -->
+      <div class="col-md-3 col-lg-2 sidebar">
+        <h4 class="text-center mb-4">Provider</h4>
+        <a href="/provider/dashboard" class="{{#if (eq active 'dashboard')}}active{{/if}}">Dashboard</a>
+        <a href="/provider/profile" class="{{#if (eq active 'profile')}}active{{/if}}">Profile</a>
+        <a href="/provider/reviews" class="{{#if (eq active 'reviews')}}active{{/if}}">Reviews</a>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-md-9 col-lg-10 main-content">
+        {{{body}}}
+      </div>
+
+    </div>
+  </div>
+  {{> footer}}
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

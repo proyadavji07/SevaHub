@@ -1,0 +1,21 @@
+<div class="container mt-4">
+  <h2 class="mb-4"> Checkout</h2>
+
+  <div class="card shadow-sm p-4">
+    <h4 class="mb-3">Service Details</h4>
+
+    <p><strong>Service:</strong> {{item.serviceName}}</p>
+    <p><strong>Provider:</strong> {{item.serviceProviderId.name}}</p>
+    <p><strong>Price:</strong> ₹{{item.price}}</p>
+    <p><strong>Description:</strong> {{item.description}}</p>
+
+    <hr>
+    <div class="d-flex justify-content-between">
+      <a href="/customer/cart" class="btn btn-secondary">⬅ Back to Cart</a>
+
+      <form action="/customer/checkout/{{item._id}}/confirm" method="POST">
+        <button type="submit" class="btn btn-success">Confirm & Book</button>
+      </form>
+    </div>
+  </div>
+</div>

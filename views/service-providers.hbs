@@ -1,0 +1,120 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<div class="max-w-7xl mx-auto p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-12 min-h-screen">
+
+  <!-- Left & Middle Content: Services and Provider Options -->
+  <section class="md:col-span-2 space-y-10">
+    <!-- Category: Kitchen/Bathroom -->
+    <article>
+      <h2 class="text-3xl font-extrabold mb-6">Available Services - {{this.name}}</h2>
+      {{#if providers.length}}
+        {{#each providers}}
+          <div class="flex justify-between border-b border-gray-300 pb-6 mb-6">
+            <div class="max-w-xl pr-8">
+              <h3 class="font-semibold text-lg leading-tight mb-1">{{serviceName}}</h3>
+
+              <p class="text-sm mb-2 font-semibold">
+                Starts at <span class="text-lg text-blue-700 font-bold">₹{{price}}</span>
+              </p>
+              <ul class="text-gray-700 list-disc list-inside text-sm mb-2">
+                <li>{{description}}</li>
+              </ul>
+
+              <!-- Unique IDs using @index -->
+              <button 
+                class="text-indigo-600 text-xs font-medium hover:underline focus:outline-none"
+                aria-expanded="false"
+                aria-controls="details-{{@index}}"
+                id="toggleDetailBtn-{{@index}}">
+                View More Details ▼
+              </button>
+
+              <div id="details-{{@index}}" class="hidden text-xs mt-2 text-gray-600">
+                <ul class="list-disc list-inside space-y-1">
+                  <li><strong>{{name}}</strong></li>
+                  <li><strong>⚧ Gender:</strong> {{gender}}</li>
+                  <li><strong>Phone:</strong> {{phone}}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="relative w-36 shrink-0">
+              <img 
+                src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/936467b5-5244-48a4-a90d-bc42b7446f88.png" 
+                alt="Provider Service Image" 
+                onerror="this.onerror=null;this.src='https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f00163ae-83a9-4216-82e3-e1fffc164cbd.png'" 
+                class="rounded-md aspect-square object-cover shadow-sm" />
+
+              <!-- Add to cart form -->
+              <form method="POST" action="/cart/add-to-cart">
+                <input type="hidden" name="providerId" value="{{_id}}">
+                <input type="hidden" name="serviceName" value="{{serviceName}}">
+                <input type="hidden" name="price" value="{{price}}">
+                <button type="submit"
+                  class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white border border-indigo-400 text-indigo-600 font-semibold py-1 px-4 rounded-lg shadow hover:bg-indigo-50 active:bg-indigo-100 transition">
+                  Add
+                </button>
+              </form>
+            </div>
+          </div>
+        {{/each}}
+      {{else}}
+        <p>No providers available for this service.</p>
+      {{/if}}
+
+    </article>
+  </section>
+
+  <!-- Right Sidebar: Cart and Offers -->
+  <aside class="space-y-6">
+    <section class="border border-gray-300 rounded-lg bg-white p-6 shadow-sm">
+      <h3 class="font-semibold mb-2">Your Cart</h3>
+
+      {{#if cart.length}}
+        <ul class="divide-y divide-gray-200">
+          {{#each cart}}
+            <li class="py-3 flex justify-between items-center">
+              <span class="text-sm font-medium">
+                <strong>{{this.providerName}}</strong> <br>
+                {{this.serviceName}} — <span class="text-blue-600">₹{{this.price}}</span>
+              </span>
+              <form action="/cart/remove-from-cart" method="POST" style="display:inline;">
+                <input type="hidden" name="providerId" value="{{this.providerId}}">
+                <input type="hidden" name="serviceName" value="{{this.serviceName}}">
+                <button type="submit" class="text-red-500 text-xs hover:underline">Remove</button>
+              </form>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class="flex justify-center items-center py-6 text-gray-400 select-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+            <circle cx="7" cy="21" r="2" />
+            <circle cx="17" cy="21" r="2" />
+          </svg>
+          <p class="text-lg font-medium">No items in your cart</p>
+        </div>
+      {{/if}}
+    </section>
+  </aside>
+
+</div>
+
+<script>
+  // Toggle details logic
+  document.querySelectorAll("[id^='toggleDetailBtn-']").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const index = btn.id.split("-")[1];
+      const details = document.getElementById(`details-${index}`);
+      const isExpanded = btn.getAttribute("aria-expanded") === "true";
+      if (isExpanded) {
+        btn.setAttribute("aria-expanded", "false");
+        btn.textContent = "View More Details ▼";
+        details.classList.add("hidden");
+      } else {
+        btn.setAttribute("aria-expanded", "true");
+        btn.textContent = "View Less Details ▲";
+        details.classList.remove("hidden");
+      }
+    });
+  });
+</script>

@@ -1,0 +1,36 @@
+<div class="text-center mb-4">
+  <h2> Welcome, {{provider.name}}</h2>
+  <p>Manage your bookings and customers here.</p>
+</div>
+
+{{#if orders.length}}
+  <div class="row">
+    {{#each orders}}
+      <div class="col-md-6 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h3 class="card-title text-primary">{{this.service}}</h3>
+            <p><strong>Customer:</strong> {{this.customer.name}}</p>
+            <p><strong>Phone:</strong> {{this.customer.phone}}</p>
+            <p><strong>Gender:</strong> {{this.customer.gender}}</p>
+            <p><strong>Total:</strong> ₹{{this.totalAmount}}</p>
+            <p><strong>Status:</strong> {{this.status}}</p>
+
+            <form action="/provider/orders/{{this._id}}/status" method="POST">
+              <select name="status" class="form-select mb-2">
+                <option value="accepted" {{#if (eq this.status "accepted")}}selected{{/if}}>Accepted</option>
+                <option value="completed" {{#if (eq this.status "completed")}}selected{{/if}}>Completed</option>
+                <option value="cancelled" {{#if (eq this.status "cancelled")}}selected{{/if}}>Cancelled</option>
+              </select>
+              <button class="btn btn-sm btn-primary">Update Status</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="text-center mt-5">
+    <h5>No bookings yet </h5>
+  </div>
+{{/if}}

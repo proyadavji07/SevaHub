@@ -1,0 +1,45 @@
+<style>
+  .auth-title{
+    padding: 40px 0px 0px 40px;
+  }
+  .auth-left{
+    padding: 0px 0px 40px 40px;
+  }
+  .auth-wrapper{
+    width: 50%;
+    margin: 0px 0px 0px 10px;
+    padding: 0%;
+  }
+  .btn-accent1{
+    width: 20%;
+  }
+  .form-controls{
+    padding-left: 5px;
+    width: auto;
+  }
+</style>
+<div class="auth-wrapper">
+  <h2 class="auth-title">Step 3: Select Your Role</h2>
+  <div class="col-md-6 auth-left">
+  <div class="underline"></div>
+      {{#if error}}
+        <p style="color:red">{{error}}</p>
+      {{/if}}
+      <!-- Role Selection Form -->
+      <form action="/reg-role" method="POST">
+        <!-- Phone number hidden so we can pass it to next step -->
+        <input type="hidden" name="phone" value="{{phone}}">
+
+        <div class="mb-3">
+          <label for="role" class="form-label">Choose Your Role</label>
+          <select name="role" id="role" class="form-selects" required>
+            <option value="">-- Select Role --</option>
+            <option value="customer">Customer</option>
+            <option value="service_provider">Service Provider</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-accent1 btn-primary text-white">Next</button>
+      </form>
+
+    </div>
+  </div>

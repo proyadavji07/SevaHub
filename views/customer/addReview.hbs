@@ -1,0 +1,23 @@
+<div class="container mt-4">
+  <h3 class="mb-4 text-center"> Write a Review</h3>
+
+  <div class="card shadow-sm p-4">
+    <h5 class="text-primary">{{order.service}}</h5>
+    <p><strong>Provider:</strong> {{order.serviceProvider.name}}</p>
+    <p><strong>Total Amount:</strong> ₹{{order.totalAmount}}</p>
+
+    <form action="/customer/reviews/add/{{order._id}}" method="POST">
+      <div class="mb-3">
+        <label for="rating" class="form-label">Rating (1–5)</label>
+        <input type="number" name="rating" id="rating" class="form-control" min="1" max="5" required>
+      </div>
+      <div class="mb-3">
+        <label for="comment" class="form-label">Your Feedback</label>
+        <textarea name="comment" id="comment" class="form-control" rows="3" placeholder="Write your experience..." required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-success">Submit Review</button>
+      <a href="/customer/orders" class="btn btn-secondary">Back</a>
+    </form>
+  </div>
+</div>
